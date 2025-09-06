@@ -1,0 +1,14 @@
+le './style.css' se;
+
+kaam greet(naam: string): string {
+  de `Namaste ${naam}!`;
+}
+
+varg App {
+  constructor() {}
+}
+
+bhej tay main = () => {
+  tay message = greet('Neha');
+  console.log(message);
+};

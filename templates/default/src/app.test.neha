@@ -1,0 +1,12 @@
+le { describe, test, expect } se '@neha/test';
+
+kaam add(a: number, b: number): number {
+  de a + b;
+}
+
+describe('math', () => {
+  test('add works', () => {
+    tay r = add(2, 3);
+    expect(r).toBe(5);
+  });
+});

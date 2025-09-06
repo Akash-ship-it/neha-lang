@@ -1,0 +1,33 @@
+{
+  "name": "neha-lang",
+  "version": "0.1.0",
+  "description": "Neha programming language compiler and CLI (Hindi keywords → TypeScript/JavaScript)",
+  "license": "MIT",
+  "bin": {
+    "neha": "bin/neha.js"
+  },
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "esbuild": "^0.21.5",
+    "fast-glob": "^3.3.2",
+    "fs-extra": "^11.2.0",
+    "kleur": "^4.1.5",
+    "minimist": "^1.2.8",
+    "typescript": "^5.4.5",
+    "chokidar": "^3.6.0",
+    "magic-string": "^0.30.11"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "neha",
+    "language",
+    "compiler",
+    "cli",
+    "typescript",
+    "esbuild",
+    "web"
+  ]
+}

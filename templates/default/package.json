@@ -1,0 +1,19 @@
+{
+  "name": "my-neha-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "neha dev",
+    "build": "neha build",
+    "check": "neha check",
+    "test": "neha test"
+  },
+  "neha": {
+    "version": "^0.1.0",
+    "strict": true,
+    "target": "web"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
