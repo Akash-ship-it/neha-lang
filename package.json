@@ -1,6 +1,6 @@
 {
   "name": "neha-lang",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Neha programming language compiler and CLI (Hindi keywords → TypeScript/JavaScript)",
   "license": "MIT",
   "bin": {
@@ -9,6 +9,25 @@
   "type": "commonjs",
   "engines": {
     "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Akash-ship-it/neha-lang.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Akash-ship-it/neha-lang/issues"
+  },
+  "homepage": "https://github.com/Akash-ship-it/neha-lang#readme",
+  "author": "Neha Lang Authors",
+  "files": [
+    "bin/",
+    "src/",
+    "templates/",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
   },
   "dependencies": {
     "esbuild": "^0.21.5",

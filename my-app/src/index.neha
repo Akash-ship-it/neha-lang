@@ -10,5 +10,5 @@ varg App {
 
 bhej tay main = () => {
   tay message = greet('Neha');
-  dikha(message);
+  console.log(message);
 };

@@ -12,6 +12,17 @@ function makeTestAPI() {
   const results = [];
   let currentSuite = null;
   const api = {};
+  const pending = [];
+  let rootSuite = null;
+
+  function getSuite() {
+    if (currentSuite) return currentSuite;
+    if (!rootSuite) {
+      rootSuite = { name: '(root)', tests: [] };
+      results.push(rootSuite);
+    }
+    return rootSuite;
+  }
 
   api.describe = (name, fn) => {
     const suite = { name, tests: [] };
@@ -22,13 +33,18 @@ function makeTestAPI() {
     currentSuite = prev;
   };
 
-  api.test = async (name, fn) => {
-    try {
-      await fn();
-      currentSuite.tests.push({ name, pass: true });
-    } catch (e) {
-      currentSuite.tests.push({ name, pass: false, error: e });
-    }
+  api.test = (name, fn) => {
+    const suite = getSuite();
+    const p = (async () => {
+      try {
+        await fn();
+        suite.tests.push({ name, pass: true });
+      } catch (e) {
+        suite.tests.push({ name, pass: false, error: e });
+      }
+    })();
+    pending.push(p);
+    return p;
   };
 
   function toBe(actual, expected) {
@@ -51,7 +67,7 @@ function makeTestAPI() {
     }
   };
 
-  return { api, results };
+  return { api, results, pending };
 }
 
 function nehaPlugin() {
@@ -68,14 +84,14 @@ function nehaPlugin() {
 }
 
 async function runTests({ root }) {
-  const cfg = loadConfig(root);
+  const cfg = await loadConfig(root);
   const srcDir = path.resolve(root, cfg.rootDir);
   const files = await fg(['**/*.test.neha'], { cwd: srcDir, absolute: true });
   if (files.length === 0) { log.warn('No test files found (*.test.neha)'); return true; }
 
   let allPass = true;
   for (const file of files) {
-    const { api, results } = makeTestAPI();
+    const { api, results, pending } = makeTestAPI();
     // Bundle the test with esbuild to support imports
     let output;
     try {
@@ -104,6 +120,8 @@ async function runTests({ root }) {
     try {
       const script = new vm.Script(output, { filename: path.basename(file) });
       await script.runInContext(context);
+      // wait for all tests to finish
+      await Promise.all(pending);
       // report
       console.log('\n', file);
       for (const suite of results) {

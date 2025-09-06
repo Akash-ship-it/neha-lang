@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const { pathToFileURL } = require('url');
 
 const defaultConfig = {
   target: 'es2020',
@@ -16,11 +17,13 @@ const defaultConfig = {
   },
 };
 
-function loadConfig(root) {
+async function loadConfig(root) {
   const configPath = path.join(root, 'neha.config.js');
   if (fs.existsSync(configPath)) {
     try {
-      const cfg = require(configPath);
+      const url = pathToFileURL(configPath).href;
+      const mod = await import(url);
+      const cfg = mod && (mod.default || mod);
       return { ...defaultConfig, ...cfg };
     } catch (e) {
       // fallback to default with warning

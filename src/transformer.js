@@ -35,6 +35,8 @@ const EXTENDED_IDENT = new Map([
   ['keys', 'Object.keys'],
   ['values', 'Object.values'],
   ['entries', 'Object.entries'],
+  // Console aliases
+  ['dikha', 'console.log'],
 ]);
 
 // Helpers to determine identifier boundaries
@@ -208,8 +210,14 @@ function transformKeywords(code, s) {
         if (k >= 0 && code[k] === '.') {
           // skip member access
         } else {
-          s.overwrite(start, i, EXTENDED_IDENT.get(word));
-          continue;
+          // Only replace when used in call position: next non-ws char is '('
+          let f = i;
+          while (f < len && /\s/.test(code[f])) f++;
+          if (code[f] === '(') {
+            s.overwrite(start, i, EXTENDED_IDENT.get(word));
+            i = f; // continue scanning after function name toward '('
+            continue;
+          }
         }
       }
 

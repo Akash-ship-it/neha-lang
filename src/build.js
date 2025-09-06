@@ -24,14 +24,16 @@ function nehaPlugin() {
 }
 
 async function build({ root, mode = 'production' }) {
-  const cfg = loadConfig(root);
+  const cfg = await loadConfig(root);
   const rootDir = resolvePath(root, cfg.rootDir);
   const outDir = resolvePath(root, cfg.outDir);
 
   // Clean output for deterministic builds
   await fse.emptyDir(outDir);
 
-  const entries = await fg(['**/*.neha'], { cwd: rootDir, absolute: true });
+  const entriesAbs = await fg(['**/*.neha', '!**/*.test.neha'], { cwd: rootDir, absolute: true });
+  // Convert absolute entries to relative to rootDir for clean output paths
+  const entries = entriesAbs.map(p => path.relative(rootDir, p));
   if (entries.length === 0) {
     log.warn('No .neha files found in', cfg.rootDir);
   }
@@ -39,6 +41,7 @@ async function build({ root, mode = 'production' }) {
   let result;
   if (entries.length > 0) {
     result = await esbuild.build({
+      absWorkingDir: rootDir,
       entryPoints: entries,
       outdir: outDir,
       bundle: true,

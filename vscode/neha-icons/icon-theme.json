@@ -1,0 +1,11 @@
+{
+  "iconDefinitions": {
+    "nehaFile": {
+      "iconPath": "./icons/neha-file.svg"
+    }
+  },
+  "fileExtensions": {
+    "neha": "nehaFile"
+  },
+  "hidesExplorerArrows": false
+}

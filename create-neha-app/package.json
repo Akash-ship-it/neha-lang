@@ -1,0 +1,35 @@
+{
+  "name": "create-neha-app",
+  "version": "0.1.1",
+  "description": "Create a new Neha project from official templates",
+  "bin": {
+    "create-neha-app": "bin/index.js"
+  },
+  "type": "commonjs",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Akash-ship-it/neha-lang.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Akash-ship-it/neha-lang/issues"
+  },
+  "homepage": "https://github.com/Akash-ship-it/neha-lang#readme",
+  "author": "Neha Lang Authors",
+  "preferGlobal": true,
+  "dependencies": {
+    "fs-extra": "^11.2.0",
+    "kleur": "^4.1.5",
+    "minimist": "^1.2.8",
+    "neha-lang": "^0.1.0"
+  },
+  "files": [
+    "bin/",
+    "templates/",
+    "README.md",
+    "LICENSE"
+  ]
+}

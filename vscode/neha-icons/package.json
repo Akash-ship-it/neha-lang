@@ -1,0 +1,25 @@
+{
+  "name": "neha-icons",
+  "displayName": "Neha File Icons",
+  "description": "File icon theme for the Neha language (.neha)",
+  "publisher": "neha-lang",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": ">=1.75.0"
+  },
+  "contributes": {
+    "iconThemes": [
+      {
+        "id": "neha-icons",
+        "label": "Neha Icons",
+        "path": "./icon-theme.json"
+      }
+    ]
+  },
+  "categories": ["Themes", "Other"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/neha-lang/neha"
+  },
+  "license": "MIT"
+}

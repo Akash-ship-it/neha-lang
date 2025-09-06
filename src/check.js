@@ -14,7 +14,7 @@ function looksLikeTSX(code) {
 }
 
 async function check({ root }) {
-  const cfg = loadConfig(root);
+  const cfg = await loadConfig(root);
   const tmpDir = path.join(os.tmpdir(), `neha-check-${Date.now()}`);
   await fse.emptyDir(tmpDir);
 
@@ -27,6 +27,13 @@ async function check({ root }) {
 declare namespace JSX { interface IntrinsicElements { [elemName: string]: any } }
 declare module '*.css' { const classes: { [key: string]: string }; export default classes; }
 declare module '*?*' { const anyModule: any; export default anyModule; }
+declare module '@neha/*' { const anyModule: any; export = anyModule; export default anyModule; }
+declare module '@neha/test' {
+  export const describe: (name: string, fn: () => void) => void;
+  export const test: (name: string, fn: () => any | Promise<any>) => Promise<void> | void;
+  export const expect: (actual: any) => { toBe: (exp: any) => void; toHaveBeenCalledWith: (...args: any[]) => void };
+  export const mock: { fn: (impl?: (...args: any[]) => any) => any };
+}
 `;
   const ambientPath = path.join(tmpDir, 'ambient.d.ts');
   await fs.promises.writeFile(ambientPath, ambient, 'utf8');
@@ -41,19 +48,23 @@ declare module '*?*' { const anyModule: any; export default anyModule; }
     written.push(outPath);
   }
 
-  const compilerOptions = {
-    target: ts.ScriptTarget.ES2020,
-    module: ts.ModuleKind.ESNext,
-    strict: cfg.strict !== false,
-    noImplicitAny: cfg.noImplicitAny !== false,
-    jsx: ts.JsxEmit.Preserve,
-    skipLibCheck: true,
-    allowJs: false,
-    lib: ['ES2020', 'DOM'],
+  // Use tsconfig parsing to resolve correct lib files (lib.dom.d.ts, lib.es2020*.d.ts)
+  const configJson = {
+    compilerOptions: {
+      target: 'ES2020',
+      module: 'NodeNext',
+      strict: cfg.strict !== false,
+      noImplicitAny: cfg.noImplicitAny !== false,
+      jsx: 'preserve',
+      skipLibCheck: true,
+      allowJs: false,
+      moduleResolution: 'NodeNext',
+      lib: ['ES2020', 'DOM']
+    }
   };
-
-  const host = ts.createCompilerHost(compilerOptions);
-  const program = ts.createProgram(written, compilerOptions, host);
+  const parsed = ts.parseJsonConfigFileContent(configJson, ts.sys, tmpDir);
+  const host = ts.createCompilerHost(parsed.options);
+  const program = ts.createProgram(written, parsed.options, host);
   const diagnostics = ts.getPreEmitDiagnostics(program);
   if (diagnostics.length) {
     const formatted = ts.formatDiagnosticsWithColorAndContext(diagnostics, {

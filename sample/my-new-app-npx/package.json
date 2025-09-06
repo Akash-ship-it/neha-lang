@@ -1,5 +1,5 @@
 {
-  "name": "my-neha-app",
+  "name": "my-new-app-npx",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -16,6 +16,6 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "neha-lang": "^0.1.1"
+    "neha-lang": "^0.1.0"
   }
 }

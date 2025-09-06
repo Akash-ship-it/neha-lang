@@ -14,6 +14,7 @@ function printHelp() {
   console.log('  build                 Build project for production');
   console.log('  check                 Type-check the project');
   console.log('  test                  Run tests (*.test.neha)');
+  console.log('  create-app <name>     Alias for init');
   console.log('  -v, --version         Show version');
   console.log('  -h, --help            Show help');
 }
@@ -34,7 +35,8 @@ function printHelp() {
   try {
     const root = process.cwd();
     switch (cmd) {
-      case 'init': {
+      case 'init':
+      case 'create-app': {
         const name = argv._[1];
         const template = argv.template || argv.t || 'default';
         if (!name) {
@@ -45,7 +47,8 @@ function printHelp() {
         break;
       }
       case 'dev': {
-        await require('../src/dev').dev({ root });
+        const port = argv.port || argv.p ? Number(argv.port || argv.p) : undefined;
+        await require('../src/dev').dev({ root, port });
         break;
       }
       case 'build': {

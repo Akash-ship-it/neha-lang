@@ -9,4 +9,3 @@ pnpm-debug.log*
 .vscode
 .env*
 dist
-*.tgz
