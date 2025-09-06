@@ -37,6 +37,7 @@ const EXTENDED_IDENT = new Map([
   ['entries', 'Object.entries'],
   // Console aliases
   ['dikha', 'console.log'],
+  ['bolo', 'console.info'],
 ]);
 
 // Helpers to determine identifier boundaries

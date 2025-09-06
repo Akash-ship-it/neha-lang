@@ -6,6 +6,7 @@ on:
     paths:
       - 'create-neha-app/**'
       - '.github/workflows/publish-create-neha-app.yml'
+      - 'create-neha-app/.releaserc*'
   workflow_dispatch:
 
 jobs:
@@ -14,6 +15,8 @@ jobs:
     defaults:
       run:
         working-directory: create-neha-app
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,29 +25,8 @@ jobs:
         with:
           node-version: '18'
           registry-url: 'https://registry.npmjs.org'
-      - name: Install dependencies
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install --no-audit --progress=false
-          fi
-      - name: Determine if publish is needed
-        id: check
-        shell: bash
-        run: |
-          PKG_NAME=$(node -p "require('./package.json').name")
-          PKG_VER=$(node -p "require('./package.json').version")
-          echo "Package: $PKG_NAME@$PKG_VER"
-          PUBLISHED_VER=$(npm view "$PKG_NAME@$PKG_VER" version || true)
-          if [ "$PUBLISHED_VER" = "$PKG_VER" ]; then
-            echo "Already published"
-            echo "publish=false" >> $GITHUB_OUTPUT
-          else
-            echo "publish=true" >> $GITHUB_OUTPUT
-          fi
-      - name: Publish to npm
-        if: steps.check.outputs.publish == 'true'
-        run: npm publish --access public
+      - name: Release (semantic-release)
+        run: npx -y -p semantic-release -p @semantic-release/changelog -p @semantic-release/git -p @semantic-release/npm -p @semantic-release/github -p @semantic-release/commit-analyzer -p @semantic-release/release-notes-generator semantic-release
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
