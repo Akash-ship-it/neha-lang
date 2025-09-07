@@ -1,38 +1,10 @@
-name: Publish create-neha-app
+name: (Deprecated) Publish create-neha-app (use release.yml)
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - 'create-neha-app/**'
-      - '.github/workflows/publish-create-neha-app.yml'
-      - 'create-neha-app/.releaserc*'
   workflow_dispatch:
 
 jobs:
-  publish:
+  noop:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: create-neha-app
-    permissions:
-      contents: write
-      issues: write
-      pull-requests: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          registry-url: 'https://registry.npmjs.org'
-      - name: Release (semantic-release)
-        run: npx -y -p semantic-release -p @semantic-release/changelog -p @semantic-release/git -p @semantic-release/npm -p @semantic-release/github -p @semantic-release/commit-analyzer -p @semantic-release/release-notes-generator semantic-release
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: echo "This workflow is deprecated. Use release.yml"
